@@ -1,0 +1,41 @@
+PODS:
+  - Capacitor (1.0.0-beta.2):
+    - CapacitorCordova (= 1.0.0-beta.2)
+    - GCDWebServer (~> 3.0)
+  - CapacitorCordova (1.0.0-beta.2)
+  - CapacitorZip (0.0.1):
+    - Capacitor
+    - SSZipArchive
+  - GCDWebServer (3.4.2):
+    - GCDWebServer/Core (= 3.4.2)
+  - GCDWebServer/Core (3.4.2)
+  - SSZipArchive (2.1.3)
+
+DEPENDENCIES:
+  - "Capacitor (from `../../node_modules/@capacitor/ios`)"
+  - "CapacitorCordova (from `../../node_modules/@capacitor/ios`)"
+  - CapacitorZip (from `/Users/triniwiz/Documents/oss/capacitor-zip/demo/node_modules/capacitor-zip`)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - GCDWebServer
+    - SSZipArchive
+
+EXTERNAL SOURCES:
+  Capacitor:
+    :path: "../../node_modules/@capacitor/ios"
+  CapacitorCordova:
+    :path: "../../node_modules/@capacitor/ios"
+  CapacitorZip:
+    :path: "/Users/triniwiz/Documents/oss/capacitor-zip/demo/node_modules/capacitor-zip"
+
+SPEC CHECKSUMS:
+  Capacitor: bddc2cc3e87f3e0b1c2c05e7921b9ae55f61a735
+  CapacitorCordova: 48b774f04c9fd0643c0bbe15eb86b2eb364a4a1a
+  CapacitorZip: d8617c350bb78919676f309c2f9cb8ee813f1d18
+  GCDWebServer: 8d67ee9f634b4bb91eb4b8aee440318a5fc6debd
+  SSZipArchive: 51a800ebb77f95a8329b6ced1faaff394b47f509
+
+PODFILE CHECKSUM: fc00431025d256a6b1004606532f828d36f41890
+
+COCOAPODS: 1.5.3

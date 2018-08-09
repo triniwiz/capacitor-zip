@@ -1,0 +1,8 @@
+node_modules
+.DS_Store
+dist
+src/ios/Plugin/Pods/
+demo/android/app/src/main/assets
+.idea
+demo/android/app/build
+src/android/capacitor-zip/build

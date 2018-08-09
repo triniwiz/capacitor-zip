@@ -1,0 +1,6 @@
+{
+  "appId": "co.fitcom.zipdemo",
+  "appName": "ZipDemo",
+  "bundledWebRuntime": false,
+  "webDir": "www"
+}

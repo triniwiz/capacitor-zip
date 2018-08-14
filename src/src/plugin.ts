@@ -3,7 +3,7 @@ import { IZip, UnZipOptions, ZipOptions } from './definitions';
 const { ZipPlugin } = Plugins;
 
 export class Zip implements IZip {
-  public zip(options: ZipOptions, progress: Function): Promise<any> {
+  public zip(options: ZipOptions, progress?: Function): Promise<any> {
     return new Promise((resolve, reject) => {
       ZipPlugin.zip(options, (data: any, error: any) => {
         if (!error) {
@@ -24,7 +24,7 @@ export class Zip implements IZip {
       });
     });
   }
-  public unZip(options: UnZipOptions, progress: Function): Promise<any> {
+  public unZip(options: UnZipOptions, progress?: Function): Promise<any> {
     return new Promise((resolve, reject) => {
       ZipPlugin.unZip(options, (data: any, error: any) => {
         if (!error) {

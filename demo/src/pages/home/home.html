@@ -1,14 +1,15 @@
 <ion-header>
   <ion-navbar>
     <ion-title>
-      Ionic Blank
+      Capacitor Zip
     </ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-  The world is your oyster.
-  <p>
-    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will be your guide.
-  </p>
+  <ion-button color="primary" expand="block" (click)="createFiles()">Create Files</ion-button>
+  <p>Zip Progress {{zipProgress}}% | Has Files {{ hasFiles }}</p>
+  <ion-button [disabled]="hasFiles" color="primary" expand="block" (click)="createZip()">Create Zip Archive</ion-button>
+  <p>UnZip Progress {{unzipProgress}}%  | Has Zip {{ hasZip }}</p>
+  <ion-button [disabled]="hasZip" color="primary" expand="block" (click)="unzip()">Unzip Created Archive</ion-button>
 </ion-content>

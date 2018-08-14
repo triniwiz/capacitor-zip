@@ -1,6 +1,6 @@
 {
   "name": "capacitor-zip",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "description": "Zip plugin",
   "main": "dist/esm/index.js",
   "types": "dist/esm/index.d.ts",

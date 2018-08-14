@@ -13,7 +13,7 @@ export interface IZip {
 export interface ZipOptions {
   source: string;
   destination: string;
-  keepParent: boolean;
+  keepParent?: boolean;
   password?: string;
 }
 

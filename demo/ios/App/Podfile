@@ -8,5 +8,7 @@ target 'App' do
   pod 'Capacitor', :path => '../../node_modules/@capacitor/ios'
   pod 'CapacitorCordova', :path => '../../node_modules/@capacitor/ios'
   pod 'CapacitorZip', :path => '/Users/triniwiz/Documents/oss/capacitor-zip/demo/node_modules/capacitor-zip'
+      pod 'CordovaPlugins', :path => '../../node_modules/@capacitor/cli/assets/capacitor-cordova-ios-plugins'
+    
   # Do not delete
 end

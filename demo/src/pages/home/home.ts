@@ -16,7 +16,8 @@ export class HomePage implements OnInit {
   unzipProgress: number = 0;
   hasFiles: boolean = false;
   hasZip: boolean = false;
-
+  firstData = '';
+  secondData = '';
   constructor(public navCtrl: NavController, private file: File,private zone:NgZone) {
     this.zip = new Zip();
   }
@@ -113,7 +114,10 @@ export class HomePage implements OnInit {
         destination: `${this.file.documentsDirectory}testZip`,
       }, (progress) => {
         this.unzipProgress = progress.value;
-      })
+      });
+
+      this.firstData = await this.file.readAsText(this.file.documentsDirectory + 'toZip','first.txt');
+      this.secondData = await this.file.readAsText(this.file.documentsDirectory + 'toZip','second.txt');
 
     } catch (e) {
 

@@ -8,18 +8,20 @@ import com.getcapacitor.PluginMethod;
 
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
+import net.lingala.zip4j.model.FileHeader;
 import net.lingala.zip4j.model.ZipParameters;
 import net.lingala.zip4j.progress.ProgressMonitor;
 import net.lingala.zip4j.util.Zip4jConstants;
 
 import java.io.File;
+import java.util.List;
 
 
 @NativePlugin()
 public class ZipPlugin extends Plugin {
 
     @PluginMethod(returnType = PluginMethod.RETURN_CALLBACK)
-    public void zip(PluginCall call) {
+    public void unZip(PluginCall call) {
 
         String source = call.getString("source", "");
         String destination = call.getString("destination", "");
@@ -27,7 +29,19 @@ public class ZipPlugin extends Plugin {
         String password = call.getString("password");
 
         if (source.contains("_capacitor_")) {
-            source = source.replace("_capacitor_", "file://");
+            source = source.replace("_capacitor_", "");
+        }
+
+        if (source.contains("file://")) {
+            source = source.replace("file://", "");
+        }
+
+        if (destination.contains("_capacitor_")) {
+            destination = destination.replace("_capacitor_", "");
+        }
+
+        if (destination.contains("file://")) {
+            destination = destination.replace("file://", "");
         }
 
         File archive = new File(source);
@@ -37,30 +51,47 @@ public class ZipPlugin extends Plugin {
 
         try {
             ZipFile zipFile = new ZipFile(archive);
+            zipFile.setRunInThread(true);
             if (zipFile.isEncrypted() && !password.equals("")) {
                 zipFile.setPassword(password);
             }
 
-            zipFile.extractAll(destination);
-            zipFile.setRunInThread(true);
+            File d = new File(destination);
+
+            if (!d.exists()) {
+                d.mkdirs();
+            }
+            List<FileHeader> fileHeaders = zipFile.getFileHeaders();
+            for (FileHeader header : fileHeaders) {
+                if (header.isDirectory()) {
+                    if (d.exists()) {
+                        File f = new File(destination, header.getFileName());
+                        f.mkdirs();
+                        zipFile.extractFile(header, f.toString());
+                    }
+                }
+            }
             ProgressMonitor monitor = zipFile.getProgressMonitor();
-            int progress = 0;
+            int progress;
             JSObject statusObject = new JSObject();
+            zipFile.extractAll(destination);
             while (monitor.getState() == ProgressMonitor.STATE_BUSY) {
                 progress = monitor.getPercentDone();
                 statusObject.put("status", "progressing");
                 statusObject.put("progress", progress);
                 statusObject.put("completed", false);
-                call.success(statusObject);
+                call.resolve(statusObject);
             }
 
             int result = monitor.getResult();
-
             switch (result) {
                 case ProgressMonitor.RESULT_SUCCESS:
                     JSObject object = new JSObject();
                     object.put("status", "completed");
-                    call.success(object);
+                    object.put("completed", true);
+                    object.put("progress", 100);
+                    object.put("path", destination);
+                    call.resolve(object);
                     break;
                 case ProgressMonitor.RESULT_ERROR:
                     call.error(monitor.getException().getMessage());
@@ -69,24 +100,41 @@ public class ZipPlugin extends Plugin {
                     call.error("Cancelled");
             }
         } catch (ZipException e) {
-            call.error(e.getLocalizedMessage());
+            call.error(e.getMessage());
         }
 
     }
 
     @PluginMethod(returnType = PluginMethod.RETURN_CALLBACK)
-    public void unZip(PluginCall call) {
+    public void zip(PluginCall call) {
         String source = call.getString("source", "");
         String destination = call.getString("destination", "");
         Boolean overwrite = call.getBoolean("overwrite", true);
         String password = call.getString("password");
 
+
+        if (source.contains("_capacitor_")) {
+            source = source.replace("_capacitor_", "");
+        }
+
+        if (source.contains("file://")) {
+            source = source.replace("file://", "");
+        }
+
+        if (destination.contains("_capacitor_")) {
+            destination = destination.replace("_capacitor_", "");
+        }
+
+        if (destination.contains("file://")) {
+            destination = destination.replace("file://", "");
+        }
+
         File folder = new File(source);
+        File dest = new File(destination);
+
         if (!folder.exists()) {
             call.reject("Folder does not exist, invalid folder path: " + folder.getAbsolutePath());
         }
-
-        File dest = new File(destination);
 
         if (overwrite && dest.exists()) {
             Boolean deleted = dest.delete();
@@ -94,16 +142,16 @@ public class ZipPlugin extends Plugin {
 
         try {
             ZipFile zipFile = new ZipFile(dest);
+            zipFile.setRunInThread(true);
             ZipParameters parameters = new ZipParameters();
             parameters.setCompressionMethod(Zip4jConstants.COMP_DEFLATE);
             parameters.setCompressionLevel(Zip4jConstants.DEFLATE_LEVEL_NORMAL);
-            zipFile.createZipFileFromFolder(folder, parameters, false, 0);
-            zipFile.setRunInThread(true);
-            int progress = 0;
-            JSObject statusObject = new JSObject();
             if (!password.isEmpty()) {
                 zipFile.setPassword(password);
             }
+            zipFile.createZipFileFromFolder(folder, parameters, false, 0);
+            int progress;
+            JSObject statusObject = new JSObject();
             ProgressMonitor monitor = zipFile.getProgressMonitor();
 
             while (monitor.getState() == ProgressMonitor.STATE_BUSY) {
@@ -113,7 +161,6 @@ public class ZipPlugin extends Plugin {
                 statusObject.put("completed", false);
                 call.success(statusObject);
             }
-
 
             int result = monitor.getResult();
             switch (result) {
@@ -130,7 +177,7 @@ public class ZipPlugin extends Plugin {
             }
 
         } catch (ZipException e) {
-            e.printStackTrace();
+            call.error(e.getMessage());
         }
 
     }

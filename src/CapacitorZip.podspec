@@ -1,7 +1,7 @@
 
   Pod::Spec.new do |s|
     s.name = 'CapacitorZip'
-    s.version = '1.0.0'
+    s.version = '1.0.4'
     s.summary = 'Zip plugin'
     s.license = 'MIT'
     s.homepage = 'https://github.com/triniwiz/capacitor-zip'
